@@ -1,4 +1,3 @@
-text
 name: Deploy static content to Pages
 
 on:
@@ -22,30 +21,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: recovery-uae
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: lts/*
-          cache: 'npm'
+          node-version: 20
+          cache: npm
+          cache-dependency-path: recovery-uae/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build
         run: npm run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: recovery-uae/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
-        
+        uses: actions/deploy-pages@v4
